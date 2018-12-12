@@ -79,18 +79,15 @@ fn main() -> Result<()> {
         );
     }
 
-    let mut good_claims = Vec::new();
-    for id in claims.ids.iter() {
-        good_claims.push(id);
-    }
+    let mut good_claims = claims.ids.clone();
 
-    for (_, ids) in claims.map.iter_mut() {
+    for (_, ids) in claims.map.iter() {
         if ids.len() <= 1 {
             continue;
         }
 
         for id in ids {
-            good_claims.retain(|&x| x != id);
+            good_claims.retain(|x| x != id);
         }
     }
 
