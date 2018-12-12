@@ -37,7 +37,7 @@ struct Claims {
 }
 
 impl Claims {
-    fn add(&mut self, coordinates: Coordinates, id: i32, w: i32, h: i32) {
+    fn add(&mut self, coordinates: &Coordinates, id: i32, w: i32, h: i32) {
         self.ids.push(id);
 
         for i in 0..w {
@@ -72,7 +72,7 @@ fn main() -> Result<()> {
         };
 
         claims.add(
-            coordinates,
+            &coordinates,
             caps["id"].parse::<i32>().unwrap(),
             caps["h"].parse::<i32>().unwrap(),
             caps["w"].parse::<i32>().unwrap(),
