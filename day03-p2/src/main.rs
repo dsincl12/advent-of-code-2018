@@ -79,30 +79,22 @@ fn main() -> Result<()> {
         );
     }
 
-    let mut good_claims = HashMap::new();
-    for c in claims.ids.iter() {
-        good_claims.insert(c, true);
+    let mut good_claims = Vec::new();
+    for id in claims.ids.iter() {
+        good_claims.push(id);
     }
 
-    for (_, ids) in claims.map.iter() {
+    for (_, ids) in claims.map.iter_mut() {
         if ids.len() <= 1 {
             continue;
         }
 
         for id in ids {
-            good_claims.remove_entry(id);
-        }
-
-        if good_claims.len() == 1 {
-            break;
+            good_claims.retain(|&x| x != id);
         }
     }
 
-    assert!(good_claims.len() == 1);
-
-    for (id, _) in good_claims.drain() {
-        println!("{}", *id);
-    }
+    println!("{}", good_claims[0]);
 
     Ok(())
 }
