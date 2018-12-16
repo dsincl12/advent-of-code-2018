@@ -38,15 +38,14 @@ fn main() -> Result<()> {
                 minute_asleep = 0;
             }
             None => match guard_state {
-                GuardState::Awake => match regex_minute_falls_asleep.captures(&line) {
-                    Some(capture) => {
+                GuardState::Awake => {
+                    if let Some(capture) = regex_minute_falls_asleep.captures(&line) {
                         guard_state = GuardState::Asleep;
                         minute_asleep = capture["minute"].parse::<u32>().unwrap();
                     }
-                    None => {}
-                },
-                GuardState::Asleep => match regex_minute_wakes_up.captures(&line) {
-                    Some(capture) => {
+                }
+                GuardState::Asleep => {
+                    if let Some(capture) = regex_minute_wakes_up.captures(&line) {
                         guard_state = GuardState::Awake;
                         let minute_awake = capture["minute"].parse::<u32>().unwrap();
 
@@ -55,8 +54,7 @@ fn main() -> Result<()> {
                             guard_records.entry(guard_id).or_insert([0; 60])[index] += 1;
                         }
                     }
-                    None => {}
-                },
+                }
             },
         }
     }
@@ -64,7 +62,7 @@ fn main() -> Result<()> {
     let mut minutes_asleep = 0;
     let mut current_guard_id = 0;
     for (guard_id, record) in guard_records.iter() {
-        let temp = record.iter().fold(0, |a, &b| a + b);
+        let temp = record.iter().sum();
 
         if temp > minutes_asleep {
             minutes_asleep = temp;
@@ -72,7 +70,7 @@ fn main() -> Result<()> {
         }
     }
 
-    let guard_record = guard_records.get(&current_guard_id).unwrap();
+    let guard_record = &guard_records[&current_guard_id];
 
     let mut sleepiest_minute = 0;
     for (i, &value) in guard_record.iter().enumerate() {

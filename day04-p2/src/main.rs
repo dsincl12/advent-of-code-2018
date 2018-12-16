@@ -38,15 +38,14 @@ fn main() -> Result<()> {
                 minute_asleep = 0;
             }
             None => match guard_state {
-                GuardState::Awake => match regex_minute_falls_asleep.captures(&line) {
-                    Some(capture) => {
+                GuardState::Awake => {
+                    if let Some(capture) = regex_minute_falls_asleep.captures(&line) {
                         guard_state = GuardState::Asleep;
                         minute_asleep = capture["minute"].parse::<u32>().unwrap();
                     }
-                    None => {}
-                },
-                GuardState::Asleep => match regex_minute_wakes_up.captures(&line) {
-                    Some(capture) => {
+                }
+                GuardState::Asleep => {
+                    if let Some(capture) = regex_minute_wakes_up.captures(&line) {
                         guard_state = GuardState::Awake;
                         let minute_awake = capture["minute"].parse::<u32>().unwrap();
 
@@ -55,8 +54,7 @@ fn main() -> Result<()> {
                             guard_records.entry(guard_id).or_insert([0; 60])[index] += 1;
                         }
                     }
-                    None => {}
-                },
+                }
             },
         }
     }
