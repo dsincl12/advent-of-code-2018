@@ -16,11 +16,11 @@ fn main() -> Result<()> {
 }
 
 fn merge_polymers(mut index: usize, mut line: String) {
-    while index < line.chars().count() {
+    if index < line.chars().count() {
         let ch1 = line.chars().nth(index).unwrap();
         let ch2 = line.chars().nth(index - 1).unwrap();
 
-        if merge_possible(&ch1, &ch2) {
+        if merge_possible(ch1, ch2) {
             line.remove(index);
             line.remove(index - 1);
 
@@ -37,18 +37,14 @@ fn merge_polymers(mut index: usize, mut line: String) {
     println!("{}", line.len());
 }
 
-fn merge_possible(ch1: &char, ch2: &char) -> bool {
-    if ch1.is_lowercase() {
-        if *ch2 == ch1.to_uppercase().next().unwrap() {
-            return true;
-        }
+fn merge_possible(ch1: char, ch2: char) -> bool {
+    if ch1.is_lowercase() && ch2 == ch1.to_uppercase().next().unwrap() {
+        return true;
     }
 
-    if ch1.is_uppercase() {
-        if *ch2 == ch1.to_lowercase().next().unwrap() {
-            return true;
-        }
+    if ch1.is_uppercase() && ch2 == ch1.to_lowercase().next().unwrap() {
+        return true;
     }
 
-    return false;
+    false
 }
