@@ -62,8 +62,6 @@ fn merge_polymers(mut index: usize, mut line: String) -> usize {
         return merge_polymers(index + 1, line);
     }
 
-    // println!("line: {}, len: {}", line, line.len());
-
     line.len()
 }
 
